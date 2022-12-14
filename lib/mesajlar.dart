@@ -1,17 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_1/firebase_options.dart';
+
+String mesaj = "";
 
 class MesajPage extends StatefulWidget {
   const MesajPage({super.key, required this.gelenBilgi});
   final String gelenBilgi;
+
   @override
   State<StatefulWidget> createState() {
     return _MesajPageState();
   }
 }
 
-String mesaj = "";
-
 class _MesajPageState extends State<MesajPage> {
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+
   @override
   Widget build(Object context) {
     //---------------------------------> Scaffold Widget'i -Başlangıç
@@ -26,7 +32,8 @@ class _MesajPageState extends State<MesajPage> {
         body: Center(
             child: Column(
           children: [
-            Text("Kullanıcı Adı Giriniz"),
+            Text(widget.gelenBilgi),
+            Text("Mesaj Yazınız:"),
             Container(
                 width: 250,
                 height: 100,
@@ -37,7 +44,14 @@ class _MesajPageState extends State<MesajPage> {
                     });
                   },
                 )),
-            ElevatedButton(onPressed: (() {}), child: Text("Giriş"))
+            ElevatedButton(
+                onPressed: (() {
+                  DatabaseReference ref =
+                      FirebaseDatabase.instance.ref("mesajlar/");
+
+                  ref.set({"isim": widget.gelenBilgi, "mesaj": mesaj});
+                }),
+                child: Text("Gönder"))
           ],
         )
             //---------------------------------> Body Özelliği -Bitiş
